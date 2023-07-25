@@ -639,6 +639,16 @@ class ExportPortlets(BaseExport):
         self.results = []
         portal = api.portal.get()
         portal.ZopeFindAndApply(self.context, search_sub=True, apply_func=self.get_portlets)
+        portlets = export_local_portlets(portal)
+        blacklist = export_portlets_blacklist(portal)
+        portal_results = {}
+        if portlets:
+            portal_results["portlets"] = portlets
+        if blacklist:
+            portal_results["blacklist_status"] = blacklist
+        if portal_results:
+            portal_results["uuid"] = config.SITE_ROOT
+            self.results.append(portal_results)
         return self.results
 
     def get_portlets(self,obj, path):
