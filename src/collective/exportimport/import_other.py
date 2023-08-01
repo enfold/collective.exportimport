@@ -698,7 +698,10 @@ class ImportPortlets(BrowserView):
     def import_portlets(self, data):
         results = 0
         for item in data:
-            obj = api.content.get(UID=item["uuid"])
+            if item["uuid"] == config.SITE_ROOT:
+                obj = api.portal.get()
+            else:
+                obj = api.content.get(UID=item["uuid"])
             if not obj:
                 continue
             registered_portlets = register_portlets(obj, item)
